@@ -25,10 +25,9 @@ const EmployeeList = () => {
         alert('Failed to fetch data');
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   // Logic for pagination
   const indexOfLastEmployee = currentPage * employeesPerPage;
