@@ -9,23 +9,24 @@ const EmployeeList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json'
-        );
-        setEmployees(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch data. Please try again later.');
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            const response = await axios.get(
+            'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json'
+            );
+            setEmployees(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setError('Failed to fetch data');
+            setLoading(false);
+            alert('Failed to fetch data');
+        }
+        };
+    
+        fetchData();
+    }, []);
 
   // Logic for pagination
   const indexOfLastEmployee = currentPage * employeesPerPage;
