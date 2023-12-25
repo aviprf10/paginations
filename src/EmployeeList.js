@@ -19,10 +19,8 @@ const EmployeeList = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data');
+        setError('Failed to fetch data. Please try again later.');
         setLoading(false);
-        // Display an alert on failed data fetch
-        alert('Failed to fetch data');
       }
     };
 
