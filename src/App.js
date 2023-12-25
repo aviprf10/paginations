@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom'; // Import the jest-dom library
 
 const Pagination = () => {
   const [data, setData] = useState([]);
@@ -26,10 +28,6 @@ const Pagination = () => {
   const indexOfFirstEmployee = indexOfLastEmployee - perPage;
   const currentEmployees = data.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   const handleNext = () => {
     if (currentPage < Math.ceil(data.length / perPage)) {
       setCurrentPage(currentPage + 1);
@@ -50,7 +48,6 @@ const Pagination = () => {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            {/* Add more columns as needed */}
           </tr>
         </thead>
         <tbody>
@@ -58,7 +55,6 @@ const Pagination = () => {
             <tr key={employee.id}>
               <td>{employee.name}</td>
               <td>{employee.email}</td>
-              {/* Add more columns as needed */}
             </tr>
           ))}
         </tbody>
