@@ -4,7 +4,6 @@ const Pagination = () => {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchEmployeeData();
@@ -23,10 +22,9 @@ const Pagination = () => {
       const currentEmployees = data.slice(startIndex, endIndex);
       setEmployees(currentEmployees);
       setTotalPages(Math.ceil(data.length / pageSize));
-      setError(null); // Reset error state on successful fetch
     } catch (error) {
       console.error('Failed to fetch data:', error);
-      setError('Failed to fetch data');
+      alert('Failed to fetch data');
     }
   };
 
@@ -44,7 +42,6 @@ const Pagination = () => {
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <table>
         <thead>
           <tr>
