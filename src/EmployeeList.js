@@ -1,99 +1,53 @@
-// src/EmployeeList.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
-const EmployeeList = () => {
+const Pagination = () => {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [employeesPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
 
-    useEffect(() => {
-        const fetchData = async () => {
-        try {
-            const response = await axios.get(
-            'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json'
-            );
-            setEmployees(response.data);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('Failed to fetch data');
-            setLoading(false);
-            alert('Failed to fetch data');
-        }
-        };
-    
-        fetchData();
-    }, []);
+  useEffect(() => {
+    fetchEmployeeData();
+  }, [currentPage]);
 
-  // Logic for pagination
-  const indexOfLastEmployee = currentPage * employeesPerPage;
-  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
-  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
-
-  // Change page
-  const paginate = (pageNumber) => {
-    const totalPages = Math.ceil(employees.length / employeesPerPage);
-
-    if (pageNumber > 0 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+  const fetchEmployeeData = async () => {
+    try {
+      const response = await fetch('https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json');
+      const data = await response.json();
+      const pageSize = 10;
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const currentEmployees = data.slice(startIndex, endIndex);
+      setEmployees(currentEmployees);
+      setTotalPages(Math.ceil(data.length / pageSize));
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+      alert('Failed to fetch data');
     }
   };
 
-  // Display loading state
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-  // Display error message
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <div>
       <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            {/* Add additional table headers as needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {currentEmployees.map((employee) => (
-            <tr key={employee.id}>
-              <td>{employee.id}</td>
-              <td>{employee.name}</td>
-              {/* Add additional table data as needed */}
-            </tr>
-          ))}
-        </tbody>
+        {/* Render your table rows here using the 'employees' state */}
       </table>
-
-      {/* Pagination component */}
       <div>
-        {/* Previous button */}
-        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Previous
         </button>
-
-        {/* Page numbers */}
-        {Array.from({ length: Math.ceil(employees.length / employeesPerPage) }).map(
-          (item, index) => (
-            <button key={index} onClick={() => paginate(index + 1)}>
-              {index + 1}
-            </button>
-          )
-        )}
-
-        {/* Next button */}
-        <button
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === Math.ceil(employees.length / employeesPerPage)}
-        >
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
       </div>
@@ -101,4 +55,4 @@ const EmployeeList = () => {
   );
 };
 
-export default EmployeeList;
+export default Pagination;
